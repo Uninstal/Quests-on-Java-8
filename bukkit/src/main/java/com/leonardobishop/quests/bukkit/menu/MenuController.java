@@ -43,9 +43,9 @@ public class MenuController implements Listener {
         Player player = (Player) event.getWhoClicked();
         if (tracker.containsKey(player.getUniqueId())) {
             event.setCancelled(true);
-            if (event.getClickedInventory() == null)
+            if (event.getInventory() == null)
                 return; //The player clicked outside the inventory
-            if (event.getClickedInventory().getType() == InventoryType.PLAYER)
+            if (event.getInventory().getType() == InventoryType.PLAYER)
                 return; //The clicked inventory is a player inventory type
 
             QMenu qMenu = tracker.get(player.getUniqueId());

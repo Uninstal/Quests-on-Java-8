@@ -32,9 +32,9 @@ public class ExecutableItemsQuestItem extends QuestItem {
     @Override
     public boolean compareItemStack(ItemStack other) {
         ExecutableItemInterface item = getExecutableItem();
-
+        
         Optional<ExecutableItemInterface> otherItemOptional = executableItemsManager.getExecutableItem(other);
-        if (item == null|| otherItemOptional.isEmpty()) {
+        if (item == null || !otherItemOptional.isPresent()) {
             return false;
         }
 
@@ -47,12 +47,9 @@ public class ExecutableItemsQuestItem extends QuestItem {
         if (!executableItemsManager.isValidID(executableItemsId)) {
             return null;
         }
-
+        
         Optional<ExecutableItemInterface> itemOptional = executableItemsManager.getExecutableItem(executableItemsId);
-        if (itemOptional.isEmpty()) {
-            return null;
-        }
-        return itemOptional.get();
+        return itemOptional.orElse(null);
     }
 
 }

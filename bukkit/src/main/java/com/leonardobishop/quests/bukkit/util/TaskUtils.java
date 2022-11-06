@@ -171,7 +171,36 @@ public class TaskUtils {
         return tasks;
     }
 
-    public record PendingTask(Quest quest, Task task, QuestProgress questProgress, TaskProgress taskProgress) { }
+    public static class PendingTask {
+        
+        public Quest quest;
+        public Task task;
+        public QuestProgress questProgress;
+        public TaskProgress taskProgress;
+
+        public PendingTask(Quest quest, Task task, QuestProgress questProgress, TaskProgress taskProgress) {
+            this.quest = quest;
+            this.task = task;
+            this.questProgress = questProgress;
+            this.taskProgress = taskProgress;
+        }
+
+        public Quest quest() {
+            return quest;
+        }
+
+        public Task task() {
+            return task;
+        }
+
+        public TaskProgress taskProgress() {
+            return taskProgress;
+        }
+
+        public QuestProgress questProgress() {
+            return questProgress;
+        }
+    }
 
     public enum TaskConstraint {
         WORLD
@@ -318,7 +347,8 @@ public class TaskUtils {
                     continue;
                 }
 
-                if (object instanceof ConfigurationSection section) {
+                if (object instanceof ConfigurationSection) {
+                    ConfigurationSection section = (ConfigurationSection) object;
 
                     if (section.contains("quest-item")) {
                         String itemType = section.getString("quest-item");
@@ -438,7 +468,8 @@ public class TaskUtils {
                 Object configBlock = config.get(path);
 
                 List<String> checkBlocks = new ArrayList<>();
-                if (configBlock instanceof List<?> configList) {
+                if (configBlock instanceof List<?>) {
+                    List<?> configList = (List<?>) configBlock;
                     for (Object object : configList) {
                         checkBlocks.add(String.valueOf(object));
                     }
@@ -485,7 +516,8 @@ public class TaskUtils {
                 Object configColor = config.get(path);
 
                 List<String> checkColors = new ArrayList<>();
-                if (configColor instanceof List<?> configList) {
+                if (configColor instanceof List<?>) {
+                    List<?> configList = (List<?>) configColor;
                     for (Object object : configList) {
                         checkColors.add(String.valueOf(object));
                     }
@@ -533,7 +565,8 @@ public class TaskUtils {
                 Object configObject = config.get(path);
 
                 List<String> checkEntities = new ArrayList<>();
-                if (configObject instanceof List<?> configList) {
+                if (configObject instanceof List<?>) {
+                    List<?> configList = (List<?>) configObject;
                     for (Object object : configList) {
                         checkEntities.add(String.valueOf(object));
                     }
@@ -581,7 +614,8 @@ public class TaskUtils {
                 Object configObject = config.get(path);
 
                 List<String> checkEnchantments = new ArrayList<>();
-                if (configObject instanceof List<?> configList) {
+                if (configObject instanceof List<?>) {
+                    List<?> configList = (List<?>) configObject;
                     for (Object object : configList) {
                         checkEnchantments.add(String.valueOf(object));
                     }

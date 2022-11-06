@@ -28,10 +28,10 @@ public final class ShearingTaskType extends BukkitTaskType {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onShear(PlayerShearEntityEvent event) {
-        if (!(event.getEntity() instanceof Sheep sheep)) {
+        if (!(event.getEntity() instanceof Sheep)) {
             return;
         }
-
+        Sheep sheep = (Sheep) event.getEntity();
         if (event.getPlayer().hasMetadata("NPC")) return;
 
         Player player = event.getPlayer();

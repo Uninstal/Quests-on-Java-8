@@ -81,28 +81,25 @@ public final class WalkingTaskType extends BukkitTaskType {
     }
 
     private boolean validateTransportMethod(Player player, String mode) {
-        return switch (mode.toLowerCase()) {
-            case "boat" -> player.getVehicle() != null && player.getVehicle().getType() == EntityType.BOAT;
-            case "horse" -> player.getVehicle() != null && player.getVehicle().getType() == EntityType.HORSE;
-            case "pig" -> player.getVehicle() != null && player.getVehicle().getType() == EntityType.PIG;
-            case "minecart" -> player.getVehicle() != null && player.getVehicle().getType() == EntityType.MINECART;
-            case "strider" -> plugin.getVersionSpecificHandler().isPlayerOnStrider(player);
-            case "sneaking" -> // sprinting does not matter
-                    player.isSneaking() && !player.isSwimming() && !player.isFlying()
+        switch (mode.toLowerCase()) {
+            case "boat": return player.getVehicle() != null && player.getVehicle().getType() == EntityType.BOAT;
+            case "horse": return player.getVehicle() != null && player.getVehicle().getType() == EntityType.HORSE;
+            case "pig": return player.getVehicle() != null && player.getVehicle().getType() == EntityType.PIG;
+            case "minecart": return player.getVehicle() != null && player.getVehicle().getType() == EntityType.MINECART;
+            case "strider": return plugin.getVersionSpecificHandler().isPlayerOnStrider(player);
+            case "sneaking": // sprinting does not matter
+                    return player.isSneaking() && !player.isFlying()
                             && !plugin.getVersionSpecificHandler().isPlayerGliding(player);
-            case "walking" ->
-                    !player.isSneaking() && !player.isSwimming() && !player.isSprinting() && !player.isFlying()
+            case "walking": 
+                    return !player.isSneaking() && !player.isSprinting() && !player.isFlying()
                             && !plugin.getVersionSpecificHandler().isPlayerGliding(player);
-            case "running" -> !player.isSneaking() && !player.isSwimming() && player.isSprinting() && !player.isFlying()
-                    && !plugin.getVersionSpecificHandler().isPlayerGliding(player);
-            case "swimming" -> // sprinting and sneaking do not matter, flying is not possible
-                    player.isSwimming() && !plugin.getVersionSpecificHandler().isPlayerGliding(player);
-            case "flying" -> // if the player is flying then the player is flying
-                    player.isFlying();
-            case "elytra" -> // if the player is gliding then the player is gliding
-                    plugin.getVersionSpecificHandler().isPlayerGliding(player);
-            default -> false;
-        };
+            case "running": 
+                    return  !player.isSneaking() && player.isSprinting() && !player.isFlying()
+                            && !plugin.getVersionSpecificHandler().isPlayerGliding(player);
+            case "flying": return player.isFlying();
+            case "elytra": return plugin.getVersionSpecificHandler().isPlayerGliding(player);
+            default: return false;
+        }
     }
 
 }

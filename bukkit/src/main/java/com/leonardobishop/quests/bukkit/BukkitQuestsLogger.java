@@ -29,10 +29,10 @@ public class BukkitQuestsLogger implements QuestsLogger {
             return;
         }
         switch (level) {
-            case DEBUG -> plugin.getLogger().info("DEBUG: " + str);
-            case INFO -> plugin.getLogger().info(str);
-            case ERROR -> plugin.getLogger().severe(str);
-            case WARNING -> plugin.getLogger().warning(str);
+            case DEBUG: plugin.getLogger().info("DEBUG: " + str); break;
+            case INFO: plugin.getLogger().info(str); break;
+            case ERROR: plugin.getLogger().severe(str); break;
+            case WARNING: plugin.getLogger().warning(str); break;
         }
     }
 

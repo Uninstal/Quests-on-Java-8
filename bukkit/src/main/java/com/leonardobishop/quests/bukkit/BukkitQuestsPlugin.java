@@ -218,9 +218,6 @@ public class BukkitQuestsPlugin extends JavaPlugin implements Quests {
         // TODO move above to version specific handlers
         if (version <= 8) {
             versionSpecificHandler = new VersionSpecificHandler8();
-        } else switch (version) {
-            case 9, 10, 11, 12, 13, 14, 15 -> versionSpecificHandler = new VersionSpecificHandler9();
-            default -> versionSpecificHandler = new VersionSpecificHandler16();
         }
 
         questsConfig.setItemGetter(itemGetter);
@@ -303,10 +300,6 @@ public class BukkitQuestsPlugin extends JavaPlugin implements Quests {
             taskTypeManager.registerTaskType(new BucketEmptyTaskType(this));
             taskTypeManager.registerTaskType(new BucketFillTaskType(this));
             taskTypeManager.registerTaskType(new InteractTaskType(this));
-            try {
-                Class.forName("org.bukkit.event.inventory.SmithItemEvent");
-                taskTypeManager.registerTaskType(new SmithingTaskType(this));
-            } catch (ClassNotFoundException ignored) { } // server version cannot support task type
             // TODO: FIX
             // taskTypeManager.registerTaskType(new BrewingCertainTaskType());
             try {

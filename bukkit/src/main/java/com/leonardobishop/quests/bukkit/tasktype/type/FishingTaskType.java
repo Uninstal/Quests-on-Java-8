@@ -45,9 +45,10 @@ public final class FishingTaskType extends BukkitTaskType {
         }
         
         Player player = event.getPlayer();
-        if (!(event.getCaught() instanceof Item caught)) {
+        if (!(event.getCaught() instanceof Item)) {
             return;
         }
+        Item caught = (Item) event.getCaught();
         QPlayer qPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId());
         if (qPlayer == null) {
             return;

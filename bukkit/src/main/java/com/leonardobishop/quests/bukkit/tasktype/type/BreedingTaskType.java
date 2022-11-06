@@ -42,7 +42,8 @@ public final class BreedingTaskType extends BukkitTaskType {
         }
         // Check if there is a player in the list, otherwise: return.
         for (Entity current : entList) {
-            if (current instanceof Player player && !current.hasMetadata("NPC")) {
+            if (current instanceof Player && !current.hasMetadata("NPC")) {
+                Player player = (Player) current;
                 QPlayer qPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId());
                 if (qPlayer == null) {
                     continue;

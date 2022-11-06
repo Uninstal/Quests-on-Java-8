@@ -76,7 +76,7 @@ public class AdminDebugReportCommandHandler implements CommandHandler {
             lines.add("Server name: " + plugin.getServer().getName());
             lines.add("Server version: " + plugin.getServer().getVersion());
             lines.add("Bukkit version: " + plugin.getServer().getBukkitVersion());
-            lines.add("Minecraft version: " + plugin.getServer().getMinecraftVersion());
+            lines.add("Minecraft version: 1.12.2");
             lines.add("Player count: " + plugin.getServer().getOnlinePlayers().size());
             lines.add("");
 
@@ -310,22 +310,22 @@ public class AdminDebugReportCommandHandler implements CommandHandler {
     private <E> void printList(List<String> lines, int depth, String title, Collection<E> list, Function<E, String> getter) {
         depth = depth * 4;
         if (list.size() == 0) {
-            lines.add(String.format("%s%s (0): (empty)", " ".repeat(depth), title));
+            lines.add(String.format("%s%s (0): (empty)", repeat(" ", depth), title));
             return;
         }
-        lines.add(String.format("%s%s (%d):", " ".repeat(depth), title, list.size()));
+        lines.add(String.format("%s%s (%d):", repeat(" ", depth), title, list.size()));
         for (E element : list) {
-            lines.add(String.format("%s - %s", " ".repeat(depth), getter.apply(element)));
+            lines.add(String.format("%s - %s", repeat(" ", depth), getter.apply(element)));
         }
     }
 
     private <K, V> void printMap(List<String> lines, int depth, String title, Map<K, V> map) {
         depth = depth * 4;
         if (map.size() == 0) {
-            lines.add(String.format("%s%s (0): (empty)", " ".repeat(depth), title));
+            lines.add(String.format("%s%s (0): (empty)", repeat(" ", depth), title));
             return;
         }
-        lines.add(String.format("%s%s:", " ".repeat(depth), title));
+        lines.add(String.format("%s%s:", repeat(" ", depth), title));
         int keyMaxLength = 1;
         int valueMaxLength = 1;
         Map<String, String> stringifiedValues = new HashMap<>();
@@ -356,17 +356,24 @@ public class AdminDebugReportCommandHandler implements CommandHandler {
             }
             stringifiedValues.put(String.valueOf(entry.getKey()), value);
         }
-        String separator = String.format("%s|-%-" + keyMaxLength + "s-+-%-" + valueMaxLength + "s-|", " ".repeat(depth), "-".repeat(keyMaxLength), "-".repeat(valueMaxLength));
+        String separator = String.format("%s|-%-" + keyMaxLength + "s-+-%-" + valueMaxLength + "s-|", repeat(" ", depth), repeat("-", keyMaxLength), repeat("-", keyMaxLength));
         lines.add(separator);
         for (Map.Entry<String, String> entry : stringifiedValues.entrySet()) {
             String value = entry.getValue();
             boolean firstLine = true;
             for (String line : value.split("\n")) {
-                lines.add(String.format("%s| %-" + keyMaxLength + "s | %-" + valueMaxLength + "s |", " ".repeat(depth), firstLine ? entry.getKey() : "", line));
+                lines.add(String.format("%s| %-" + keyMaxLength + "s | %-" + valueMaxLength + "s |", repeat(" ", depth), firstLine ? entry.getKey() : "", line));
                 firstLine = false;
             }
             lines.add(separator);
         }
+    }
+    
+    private String repeat(String value, int depth) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < depth; i++)
+            builder.append(value);
+        return builder.toString();
     }
 
     private void error(String error) {

@@ -28,8 +28,8 @@ public class BukkitTaskTypeManager extends TaskTypeManager {
 
     @Override
     public boolean registerTaskType(@NotNull TaskType taskType) {
-        if (!(taskType instanceof BukkitTaskType bukkitTaskType)) throw new RuntimeException("BukkitTaskTypeManager implementation can only accept instances of BukkitTaskType!");
-
+        if (!(taskType instanceof BukkitTaskType)) throw new RuntimeException("BukkitTaskTypeManager implementation can only accept instances of BukkitTaskType!");
+        BukkitTaskType bukkitTaskType = (BukkitTaskType) taskType;
         if (super.registerTaskType(taskType)) {
             bukkitTaskType.taskTypeManager = this;
             plugin.getServer().getPluginManager().registerEvents(bukkitTaskType, plugin);
@@ -48,15 +48,16 @@ public class BukkitTaskTypeManager extends TaskTypeManager {
             String chatHeader = ChatColor.GRAY + "[" + associatedName + " - " + questId + "/" + taskId + " - type '" + taskType + "']";
             if (player != null && debugType != null) {
                 switch (debugType) {
-                    case ALL -> {
+                    case ALL:
                         player.sendMessage(chatHeader);
                         player.sendMessage(message);
-                    }
-                    case SELF -> {
+                        break;
+                    case SELF:
                         if (player.getUniqueId().equals(associatedPlayer)) {
                             player.sendMessage(chatHeader);
-                            player.sendMessage(message);                        }
-                    }
+                            player.sendMessage(message);
+                        }
+                        break;
                 }
             }
         }

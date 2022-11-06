@@ -24,8 +24,6 @@ repositories {
     maven { url = 'https://mvn.lumine.io/repository/maven-public/' }
     // PlaceholderAPI
     maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
-    // EssentialsX
-    maven { url = 'https://repo.essentialsx.net/releases/' }
     // JitPack (IridiumSkyblock, ShopGUI+, SCore)
     maven { url = 'https://jitpack.io' }
     // CoreProtect
@@ -48,8 +46,6 @@ repositories {
 
 dependencies {
     compileOnly project(':common')
-    // Paper
-    compileOnly 'io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT'
     // ASkyBlock
     compileOnly ('com.wasteofplastic:askyblock:3.0.9.4') {
         exclude group: 'net.milkbowl.vault', module: 'VaultAPI'
@@ -63,6 +59,9 @@ dependencies {
     // TODO fix whenever repo is up
     //    compileOnly 'com.github.Iridium-Development:IridiumSkyblock:master-SNAPSHOT'
     // download  from spigot and add to /libs/ yourself
+    // Spigot 1.12.2
+    compileOnly("org.bukkit:bukkit:1.13.1-R0.1-SNAPSHOT")
+    implementation(files("libs/EssetialsX.jar"))
     // uSkyBlock
     compileOnly 'com.github.rlf:uSkyBlock-API:2.6.4'
     // MythicMobs 4
@@ -75,10 +74,6 @@ dependencies {
     }
     // PlaceholderAPI
     compileOnly 'me.clip:placeholderapi:2.11.1'
-    // EssentialsX
-    compileOnly ('net.ess3:EssentialsX:2.18.2') {
-        transitive = false
-    }
     // ShopGUI+
     compileOnly ('com.github.brcdev-minecraft:shopgui-api:3.0.0') {
         transitive = false
@@ -118,9 +113,9 @@ dependencies {
     // bStats
     implementation 'org.bstats:bstats-bukkit-lite:1.8'
     // HikariCP
-    implementation 'com.zaxxer:HikariCP:4.0.3'
+    implementation 'com.zaxxer:HikariCP:5.0.1'
     // slf4j
-    implementation 'org.slf4j:slf4j-nop:1.7.36'
+    implementation 'org.slf4j:slf4j-nop:2.0.3'
 
     compileOnly fileTree(dir: 'libs', includes: ['*.jar'])
 }

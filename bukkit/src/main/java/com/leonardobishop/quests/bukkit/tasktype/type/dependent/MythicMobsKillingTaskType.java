@@ -7,6 +7,7 @@ import com.leonardobishop.quests.common.player.QPlayer;
 import com.leonardobishop.quests.common.player.questprogressfile.TaskProgress;
 import com.leonardobishop.quests.common.quest.Quest;
 import com.leonardobishop.quests.common.quest.Task;
+import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -75,16 +76,17 @@ public final class MythicMobsKillingTaskType extends BukkitTaskType {
 
     private final class MythicMobs5Listener implements Listener {
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-        public void onMythicMobs5MobDeath(io.lumine.mythic.bukkit.events.MythicMobDeathEvent event) {
+        public void onMythicMobs5MobDeath(MythicMobDeathEvent event) {
             handle(event.getKiller(), event.getEntity(), event.getMobType().getInternalName(), event.getMobLevel());
         }
     }
 
     private void handle(LivingEntity killer, Entity mob, String mobName, double level) {
-        if (!(killer instanceof Player player)) {
+        if (!(killer instanceof Player)) {
             return;
         }
-
+        
+        Player player = (Player) killer;
         if (mob == null || mob instanceof Player) {
             return;
         }

@@ -16,10 +16,9 @@ public class Chat {
 
     private static final ColorAdapter legacyColorAdapter;
     private static final Pattern legacyPattern;
-    private static MiniMessageParser miniMessageParser;
 
     static {
-        String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];;
+        String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         if (version.startsWith("v1_7") || version.startsWith("v1_8") || version.startsWith("v1_9")
                 || version.startsWith("v1_10") || version.startsWith("v1_11") || version.startsWith("v1_12")
                 || version.startsWith("v1_13") || version.startsWith("v1_14") || version.startsWith("v1_15")) {
@@ -28,14 +27,6 @@ public class Chat {
             legacyColorAdapter = new HexColorAdapter();
         }
         Quests questsPlugin = (Quests) Bukkit.getPluginManager().getPlugin("Quests");
-        try {
-            Class.forName("net.kyori.adventure.Adventure", false, Bukkit.class.getClassLoader());
-            miniMessageParser = new MiniMessageParser();
-            questsPlugin.getQuestsLogger().debug("Modern chat is available.");
-        } catch (Throwable e) {
-            questsPlugin.getQuestsLogger().debug("Modern chat is not available, resorting to legacy chat.");
-            miniMessageParser = null;
-        }
         legacyPattern = Pattern.compile("&(?:\\d|#|[a-f]|[k-o]|r)");
     }
 
@@ -67,23 +58,23 @@ public class Chat {
     }
 
     public static boolean isModernChatAvailable() {
-        return miniMessageParser != null;
+        return false;
     }
 
     public static ChatColor matchConfigProblemToColor(ConfigProblem.ConfigProblemType configProblem) {
-        return switch (configProblem) {
-            case ERROR -> ChatColor.RED;
-            case WARNING -> ChatColor.YELLOW;
-            default -> ChatColor.WHITE;
-        };
+        switch (configProblem) {
+            case ERROR: return ChatColor.RED;
+            case WARNING: return ChatColor.YELLOW;
+            default: return ChatColor.WHITE;
+        }
     }
 
     public static String matchConfigProblemToColorName(ConfigProblem.ConfigProblemType configProblem) {
-        return switch (configProblem) {
-            case ERROR -> "red";
-            case WARNING -> "yellow";
-            default -> "white";
-        };
+        switch (configProblem) {
+            case ERROR: return "red";
+            case WARNING: return "yellow";
+            default: return "white";
+        }
     }
 
     /**
@@ -108,12 +99,7 @@ public class Chat {
         for (int i = 0; i < substitutions.length ; i += 2) {
             substitutedMessage = substitutedMessage.replace(substitutions[i], substitutions[i+1]);
         }
-
-        if (miniMessageParser == null || (allowLegacy && usesLegacy(message))) {
-            who.sendMessage(legacyColor(substitutedMessage));
-        } else {
-            miniMessageParser.send(who, substitutedMessage);
-        }
+        who.sendMessage(legacyColor(substitutedMessage));
     }
 
     /**

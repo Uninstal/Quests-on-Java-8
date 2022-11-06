@@ -105,30 +105,30 @@ public final class PlaceholderAPIEvaluateTaskType extends BukkitTaskType {
                                 PlaceholderAPIEvaluateTaskType.super.debug("Operator = " + operator, quest.getId(), task.getId(), player.getUniqueId());
                                 taskProgress.setProgress(numericEvaluated);
                                 switch (operator) {
-                                    case GREATER_THAN -> {
+                                    case GREATER_THAN:
                                         if (numericEvaluated > numericEvaluates) {
                                             PlaceholderAPIEvaluateTaskType.super.debug("Marking task as complete", quest.getId(), task.getId(), player.getUniqueId());
                                             taskProgress.setCompleted(true);
                                         }
-                                    }
-                                    case LESS_THAN -> {
+                                        break;
+                                    case LESS_THAN:
                                         if (numericEvaluated < numericEvaluates) {
                                             PlaceholderAPIEvaluateTaskType.super.debug("Marking task as complete", quest.getId(), task.getId(), player.getUniqueId());
                                             taskProgress.setCompleted(true);
                                         }
-                                    }
-                                    case GREATER_THAN_OR_EQUAL_TO -> {
+                                        break;
+                                    case GREATER_THAN_OR_EQUAL_TO:
                                         if (numericEvaluated >= numericEvaluates) {
                                             PlaceholderAPIEvaluateTaskType.super.debug("Marking task as complete", quest.getId(), task.getId(), player.getUniqueId());
                                             taskProgress.setCompleted(true);
                                         }
-                                    }
-                                    case LESS_THAN_OR_EQUAL_TO -> {
+                                        break;
+                                    case LESS_THAN_OR_EQUAL_TO:
                                         if (numericEvaluated <= numericEvaluates) {
                                             PlaceholderAPIEvaluateTaskType.super.debug("Marking task as complete", quest.getId(), task.getId(), player.getUniqueId());
                                             taskProgress.setCompleted(true);
                                         }
-                                    }
+                                        break;
                                 }
 
                             }

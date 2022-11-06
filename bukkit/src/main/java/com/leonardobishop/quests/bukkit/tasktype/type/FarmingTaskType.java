@@ -25,12 +25,6 @@ public final class FarmingTaskType extends BukkitTaskType {
     public FarmingTaskType(BukkitQuestsPlugin plugin) {
         super("farming", TaskUtils.TASK_ATTRIBUTION_STRING, "Break or harvest a set amount of a crop.", "farmingcertain");
         this.plugin = plugin;
-
-        try {
-            Class.forName("org.bukkit.event.player.PlayerHarvestBlockEvent");
-            plugin.getServer().getPluginManager().registerEvents(new FarmingTaskType.HarvestBlockListener(), plugin);
-        } catch (ClassNotFoundException ignored) { } // server version cannot support event
-
         super.addConfigValidator(TaskUtils.useRequiredConfigValidator(this, "amount"));
         super.addConfigValidator(TaskUtils.useIntegerConfigValidator(this, "amount"));
         super.addConfigValidator(TaskUtils.useMaterialListConfigValidator(this, "block", "blocks"));
@@ -39,13 +33,6 @@ public final class FarmingTaskType extends BukkitTaskType {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         handle(event.getPlayer(), event.getBlock(), "break");
-    }
-
-    private final class HarvestBlockListener implements Listener {
-        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-        public void onHarvestBlock(org.bukkit.event.player.PlayerHarvestBlockEvent event) {
-            handle(event.getPlayer(), event.getHarvestedBlock(), "harvest");
-        }
     }
 
     private void handle(Player player, Block block, String mode) {

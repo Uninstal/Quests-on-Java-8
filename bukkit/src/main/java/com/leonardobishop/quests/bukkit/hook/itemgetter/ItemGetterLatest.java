@@ -188,13 +188,6 @@ public class ItemGetterLatest implements ItemGetter {
             }
         }
 
-        // custom model data
-        if (!filters.contains(Filter.CUSTOM_MODEL_DATA)) {
-            if (hasCustomModelData) {
-                ism.setCustomModelData(customModelData);
-            }
-        }
-
         // unbreakable
         if (!filters.contains(Filter.UNBREAKABLE)) {
             ism.setUnbreakable(unbreakable);

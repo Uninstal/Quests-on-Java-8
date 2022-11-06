@@ -41,8 +41,8 @@ public class AdminDebugQuestCommandHandler implements CommandHandler {
 
     @Override
     public void handle(CommandSender sender, String[] args) {
-        if (sender instanceof Player player) {
-            QPlayer qPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId());
+        if (sender instanceof Player) {
+            QPlayer qPlayer = plugin.getPlayerManager().getPlayer(((Player) sender).getUniqueId());
             if (qPlayer == null) {
                 sender.sendMessage(ChatColor.RED + "Your data file is not loaded.");
                 return;

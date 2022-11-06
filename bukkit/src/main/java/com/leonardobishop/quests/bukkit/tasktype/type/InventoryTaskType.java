@@ -28,12 +28,6 @@ public final class InventoryTaskType extends BukkitTaskType {
     public InventoryTaskType(BukkitQuestsPlugin plugin) {
         super("inventory", TaskUtils.TASK_ATTRIBUTION_STRING, "Obtain a set of items.");
         this.plugin = plugin;
-
-        try {
-            Class.forName("org.bukkit.event.player.PlayerBucketEntityEvent");
-            plugin.getServer().getPluginManager().registerEvents(new BucketEntityListener(), plugin);
-        } catch (ClassNotFoundException ignored) { } // server version cannot support event
-
         super.addConfigValidator(TaskUtils.useRequiredConfigValidator(this, "amount"));
         super.addConfigValidator(TaskUtils.useIntegerConfigValidator(this, "amount"));
         super.addConfigValidator(TaskUtils.useRequiredConfigValidator(this, "item"));
@@ -69,13 +63,6 @@ public final class InventoryTaskType extends BukkitTaskType {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBucketFill(PlayerBucketFillEvent event) {
         Bukkit.getScheduler().runTaskLater(plugin, () -> checkInventory(event.getPlayer()), 1L);
-    }
-
-    private final class BucketEntityListener implements Listener {
-        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-        public void onBucketEntity(org.bukkit.event.player.PlayerBucketEntityEvent event) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> checkInventory(event.getPlayer()), 1L);
-        }
     }
 
     @SuppressWarnings("deprecation")

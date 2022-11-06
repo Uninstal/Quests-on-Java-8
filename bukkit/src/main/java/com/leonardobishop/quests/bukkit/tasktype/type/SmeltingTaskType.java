@@ -53,6 +53,10 @@ public final class SmeltingTaskType extends BukkitTaskType {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
         //noinspection DuplicatedCode
+        if (!(event.getWhoClicked() instanceof Player))
+            return;
+        
+        Player player = (Player) event.getWhoClicked();
         if (!(event.getInventory() instanceof FurnaceInventory) || event.getRawSlot() != 2
                 || (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR)
                 || event.getAction() == InventoryAction.NOTHING
@@ -61,7 +65,6 @@ public final class SmeltingTaskType extends BukkitTaskType {
                 || event.getAction() == InventoryAction.DROP_ONE_SLOT && event.getClick() == ClickType.DROP && (event.getCursor() != null && event.getCursor().getType() != Material.AIR) // https://github.com/LMBishop/Quests/issues/430
                 || event.getAction() == InventoryAction.DROP_ALL_SLOT && event.getClick() == ClickType.CONTROL_DROP && (event.getCursor() != null && event.getCursor().getType() != Material.AIR) // https://github.com/LMBishop/Quests/issues/430
                 || event.getAction() == InventoryAction.UNKNOWN && event.getClick() == ClickType.UNKNOWN // for better ViaVersion support
-                || !(event.getWhoClicked() instanceof Player player)
                 || plugin.getVersionSpecificHandler().isOffHandSwap(event.getClick()) && !plugin.getVersionSpecificHandler().isOffHandEmpty(player)) {
             return;
         }

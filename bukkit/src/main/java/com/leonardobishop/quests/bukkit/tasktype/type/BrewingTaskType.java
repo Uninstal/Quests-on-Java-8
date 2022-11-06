@@ -21,6 +21,7 @@ import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -73,7 +74,7 @@ public final class BrewingTaskType extends BukkitTaskType {
 
         final ItemStack ingredient = event.getContents().getIngredient();
         final ItemStack[] contents = event.getContents().getContents();
-        final List<ItemStack> results = event.getResults();
+        final List<ItemStack> results = Arrays.asList(event.getContents().getContents());
 
         int eventAmount = 0;
         for (int i = 0; i < results.size(); i++) {
