@@ -14,7 +14,6 @@ import com.leonardobishop.quests.common.quest.Quest;
 import com.leonardobishop.quests.common.quest.Task;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -48,9 +47,9 @@ public final class CitizensDeliverTaskType extends BukkitTaskType {
         fixedQuestItemCache.clear();
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onNPCClick(NPCRightClickEvent event) {
-        Bukkit.getScheduler().runTaskLater(plugin, () -> checkInventory(event.getClicker(), event.getNPC()), 1L);
+        checkInventory(event.getClicker(), event.getNPC());
     }
 
     @SuppressWarnings("deprecation")
@@ -118,7 +117,8 @@ public final class CitizensDeliverTaskType extends BukkitTaskType {
                 super.debug("Updating task progress (now " + (progress) + ")", quest.getId(), task.getId(), player.getUniqueId());
 
                 if (progress >= itemsNeeded) {
-                    taskProgress.setCompleted(true);
+//                    taskProgress.setCompleted(true);
+                    qPlayer.completeQuest(quest);
                     super.debug("Marking task as complete", quest.getId(), task.getId(), player.getUniqueId());
                 }
             } else {
@@ -126,7 +126,8 @@ public final class CitizensDeliverTaskType extends BukkitTaskType {
 
                 taskProgress.setProgress(total);
                 if (total >= itemsNeeded) {
-                    taskProgress.setCompleted(true);
+//                    taskProgress.setCompleted(true);
+                    qPlayer.completeQuest(quest);
                     super.debug("Marking task as complete", quest.getId(), task.getId(), player.getUniqueId());
 
                     if (remove) {

@@ -215,10 +215,7 @@ public class BukkitQuestsPlugin extends JavaPlugin implements Quests {
             itemGetter = new ItemGetterLatest();
         }
         // (version specific handler)
-        // TODO move above to version specific handlers
-        if (version <= 8) {
-            versionSpecificHandler = new VersionSpecificHandler8();
-        }
+        versionSpecificHandler = new VersionSpecificHandler9();
 
         questsConfig.setItemGetter(itemGetter);
 
@@ -306,20 +303,6 @@ public class BukkitQuestsPlugin extends JavaPlugin implements Quests {
                 Class.forName("org.bukkit.block.data.Ageable");
                 taskTypeManager.registerTaskType(new FarmingTaskType(this));
             } catch (ClassNotFoundException ignored) { } // server version cannot support task type
-            if (Bukkit.getPluginManager().isPluginEnabled("ASkyBlock")) {
-                taskTypeManager.registerTaskType(new ASkyBlockLevelTaskType(this));
-            }
-            if (Bukkit.getPluginManager().isPluginEnabled("BentoBox")) {
-                BentoBoxLevelTaskType.register(this, taskTypeManager);
-            }
-            //TODO FIX
-            if (Bukkit.getPluginManager().isPluginEnabled("IridiumSkyblock")
-                    && Bukkit.getPluginManager().getPlugin("IridiumSkyblock").getDescription().getVersion().startsWith("2")) {
-                taskTypeManager.registerTaskType(new IridiumSkyblockValueTaskType(this));
-            }
-            if (Bukkit.getPluginManager().isPluginEnabled("uSkyBlock")) {
-                taskTypeManager.registerTaskType(new uSkyBlockLevelTaskType(this));
-            }
             if (Bukkit.getPluginManager().isPluginEnabled("Citizens")) {
                 taskTypeManager.registerTaskType(new CitizensDeliverTaskType(this));
                 taskTypeManager.registerTaskType(new CitizensInteractTaskType(this));
@@ -336,28 +319,6 @@ public class BukkitQuestsPlugin extends JavaPlugin implements Quests {
             if (Bukkit.getPluginManager().isPluginEnabled("Essentials")) {
                 taskTypeManager.registerTaskType(new EssentialsMoneyEarnTaskType(this));
                 taskTypeManager.registerTaskType(new EssentialsBalanceTaskType(this));
-            }
-            if (Bukkit.getPluginManager().isPluginEnabled("ShopGUIPlus")) {
-                // not tested
-                taskTypeManager.registerTaskType(new ShopGUIPlusBuyTaskType(this));
-                taskTypeManager.registerTaskType(new ShopGUIPlusSellTaskType(this));
-            }
-            if (Bukkit.getPluginManager().isPluginEnabled("FabledSkyblock")) {
-                // not tested
-                taskTypeManager.registerTaskType(new FabledSkyblockLevelTaskType(this));
-            }
-            if (Bukkit.getPluginManager().isPluginEnabled("SuperiorSkyblock2")) {
-                // not tested
-                taskTypeManager.registerTaskType(new SuperiorSkyblockLevelType(this));
-                taskTypeManager.registerTaskType(new SuperiorSkyblockWorthType(this));
-            }
-            if (Bukkit.getPluginManager().isPluginEnabled("VotingPlugin")) {
-                // not tested
-                taskTypeManager.registerTaskType(new VotingPluginVoteType(this));
-            }
-            if (Bukkit.getPluginManager().isPluginEnabled("Votifier")) {
-                // not tested
-                taskTypeManager.registerTaskType(new NuVotifierVoteTaskType(this));
             }
 
             taskTypeManager.closeRegistrations();
@@ -390,14 +351,6 @@ public class BukkitQuestsPlugin extends JavaPlugin implements Quests {
             try {
                 qPlayerManager.savePlayerSync(qPlayer.getPlayerUUID());
             } catch (Exception ignored) { }
-        }
-        if (placeholderAPIHook != null) {
-            try {
-                placeholderAPIHook.unregisterExpansion();
-            } catch (Exception e) {
-                questsLogger.warning("You need to update PlaceholderAPI for Quests to exit gracefully:");
-                e.printStackTrace();
-            }
         }
         try {
             qPlayerManager.getStorageProvider().shutdown();

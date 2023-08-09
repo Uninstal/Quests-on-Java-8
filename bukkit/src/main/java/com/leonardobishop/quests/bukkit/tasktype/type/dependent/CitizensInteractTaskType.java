@@ -30,7 +30,7 @@ public final class CitizensInteractTaskType extends BukkitTaskType {
         });
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onNPCClick(NPCRightClickEvent event) {
         QPlayer qPlayer = plugin.getPlayerManager().getPlayer(event.getClicker().getUniqueId());
         if (qPlayer == null) {
@@ -62,7 +62,9 @@ public final class CitizensInteractTaskType extends BukkitTaskType {
             }
 
             super.debug("Marking task as complete", quest.getId(), task.getId(), player.getUniqueId());
-            taskProgress.setCompleted(true);
+//            taskProgress.setCompleted(true);
+            System.out.println("interact");
+            qPlayer.completeQuest(quest);
         }
     }
 

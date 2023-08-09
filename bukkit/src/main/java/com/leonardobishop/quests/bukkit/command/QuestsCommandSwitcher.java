@@ -52,17 +52,6 @@ public class QuestsCommandSwitcher extends CommandSwitcher implements TabExecuto
             return true;
         }
 
-        if (args.length == 0 && sender instanceof Player) {
-            Player player = (Player) sender;
-            QPlayer qPlayer = plugin.getPlayerManager().getPlayer(player.getUniqueId());
-            if (qPlayer == null) {
-                Messages.COMMAND_DATA_NOT_LOADED.send(player);
-                return true;
-            }
-            plugin.getMenuController().openMainMenu(qPlayer);
-            return true;
-        }
-
         super.handle(sender, args);
         return true;
     }
@@ -71,28 +60,11 @@ public class QuestsCommandSwitcher extends CommandSwitcher implements TabExecuto
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        return super.tabComplete(sender, args);
+        return null;
     }
 
     @Override
-    public void showHelp(CommandSender sender) {
-        sender.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "------------=[" + ChatColor.RED + " Quests v" + plugin
-                .getDescription().getVersion() + " " + ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "]=------------");
-        sender.sendMessage(ChatColor.GRAY + "The following commands are available: ");
-        sender.sendMessage(ChatColor.DARK_GRAY + " * " + ChatColor.RED + "/quests " + ChatColor.DARK_GRAY + ": show quests");
-        sender.sendMessage(ChatColor.DARK_GRAY + " * " + ChatColor.RED + "/quests c/category <categoryid> " + ChatColor.DARK_GRAY + ": open category by ID");
-        sender.sendMessage(ChatColor.DARK_GRAY + " * " + ChatColor.RED + "/quests q/quest <questid> (start|cancel|track) " + ChatColor.DARK_GRAY + ": start, cancel or track quest by ID");
-        sender.sendMessage(ChatColor.DARK_GRAY + " * " + ChatColor.RED + "/quests started " + ChatColor.DARK_GRAY + ": show started quests");
-        sender.sendMessage(ChatColor.DARK_GRAY + " * " + ChatColor.RED + "/quests cancel [questid]" + ChatColor.DARK_GRAY + ": cancel active quest/quest by name");
-        if (sender.hasPermission(subcommands.get("random").getPermission())) {
-            sender.sendMessage(ChatColor.DARK_GRAY + " * " + ChatColor.RED + "/quests random " + ChatColor.DARK_GRAY + ": show random quests");
-        }
-        if (sender.hasPermission(subcommands.get("admin").getPermission())) {
-            sender.sendMessage(ChatColor.DARK_GRAY + " * " + ChatColor.RED + "/quests a/admin " + ChatColor.DARK_GRAY + ": view help for admins");
-        }
-        sender.sendMessage(ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------=[" + ChatColor.RED + " made with <3 by LMBishop " + ChatColor
-                .GRAY.toString() + ChatColor.STRIKETHROUGH + "]=--------");
-    }
+    public void showHelp(CommandSender sender) {}
 
     @Override
     public @Nullable String getPermission() {

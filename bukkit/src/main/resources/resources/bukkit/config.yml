@@ -144,6 +144,12 @@ gui:
 #        type: "EMERALD_BLOCK"
 
 options:
+  # BossBar settings.
+  bossbar:
+    # Color of bossbar.
+    color: yellow
+    # Title of bossbar, you can use placeholders.
+    title: '&7Текущий квест: &6%quests_tracked_p:description%'
   # If categories are disabled, quests will be put into one big gui.
   categories-enabled: true
   # If true, the gui size will automatically change based on the amount of quests inside it.

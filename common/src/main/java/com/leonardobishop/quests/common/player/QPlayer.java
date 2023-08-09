@@ -5,12 +5,17 @@ import com.leonardobishop.quests.common.player.questprogressfile.QuestProgressFi
 import com.leonardobishop.quests.common.plugin.Quests;
 import com.leonardobishop.quests.common.quest.Quest;
 import com.leonardobishop.quests.common.questcontroller.QuestController;
+import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -22,6 +27,7 @@ public class QPlayer {
     private final UUID uuid;
     private final QPlayerPreferences playerPreferences;
     private final QuestProgressFile questProgressFile;
+    private final BossBar bar;
     private QuestController questController;
 
     public QPlayer(Quests plugin, UUID uuid, QPlayerPreferences playerPreferences, QuestProgressFile questProgressFile, QuestController questController) {
@@ -30,6 +36,7 @@ public class QPlayer {
         this.playerPreferences = playerPreferences;
         this.questProgressFile = questProgressFile;
         this.questController = questController;
+        this.bar = Bukkit.createBossBar("", BarColor.BLUE, BarStyle.SOLID);
     }
 
     /**
@@ -41,6 +48,10 @@ public class QPlayer {
         return this.uuid;
     }
 
+    public void executeBossBar(Consumer<BossBar> bar) {
+        bar.accept(this.bar);
+    }
+    
     /**
      * Attempt to complete a quest for the player. This will also play all effects (such as titles, messages etc.)
      * and also dispatches all rewards for the player.

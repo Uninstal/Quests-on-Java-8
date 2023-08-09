@@ -15,7 +15,10 @@ import com.leonardobishop.quests.common.player.questprogressfile.TaskProgress;
 import com.leonardobishop.quests.common.quest.Quest;
 import com.leonardobishop.quests.common.quest.Task;
 import com.leonardobishop.quests.common.questcontroller.QuestController;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -66,7 +69,7 @@ public class NormalQuestController implements QuestController {
                 case QUEST_COOLDOWN:
                     long cooldown = qPlayer.getQuestProgressFile().getCooldownFor(quest);
                     questResultMessage = Messages.QUEST_START_COOLDOWN.getMessage().replace("{time}", Format.formatTime(TimeUnit.SECONDS.convert
-                            (cooldown, TimeUnit.MILLISECONDS)));
+                      (cooldown, TimeUnit.MILLISECONDS)));
                     break;
                 case QUEST_LOCKED:
                     questResultMessage = Messages.QUEST_START_LOCKED.getMessage();
@@ -112,7 +115,7 @@ public class NormalQuestController implements QuestController {
                 Messages.send(questStartEvent.getQuestStartMessage(), player);
                 if (config.getBoolean("options.titles-enabled")) {
                     plugin.getTitleHandle().sendTitle(player, Messages.TITLE_QUEST_START_TITLE.getMessageLegacyColor().replace("{quest}", displayName),
-                            Messages.TITLE_QUEST_START_SUBTITLE.getMessageLegacyColor().replace("{quest}", displayName));
+                      Messages.TITLE_QUEST_START_SUBTITLE.getMessageLegacyColor().replace("{quest}", displayName));
                 }
                 for (String s : quest.getStartCommands()) {
                     s = s.replace("{player}", player.getName());
@@ -168,7 +171,7 @@ public class NormalQuestController implements QuestController {
             }
         }
         if (quest.getCategoryId() != null && plugin.getQuestManager().getCategoryById(quest.getCategoryId()) != null && plugin.getQuestManager()
-                .getCategoryById(quest.getCategoryId()).isPermissionRequired()) {
+          .getCategoryById(quest.getCategoryId()).isPermissionRequired()) {
             if (p != null) {
                 if (!p.hasPermission("quests.category." + quest.getCategoryId())) {
                     return QuestStartResult.NO_PERMISSION_FOR_CATEGORY;
@@ -212,6 +215,10 @@ public class NormalQuestController implements QuestController {
         }
         Player player = Bukkit.getPlayer(qPlayer.getPlayerUUID());
         if (player != null) {
+            String trackedQuest = qPlayer.getPlayerPreferences().getTrackedQuestId();
+            if (trackedQuest != null && trackedQuest.equals(quest.getId())) {
+                qPlayer.executeBossBar(bossBar -> bossBar.removePlayer(player));
+            }
             QItemStack qItemStack = plugin.getQItemStackRegistry().getQuestItemStack(quest);
             String displayName = Chat.legacyStrip(qItemStack.getName());
             String questFinishMessage = Messages.QUEST_COMPLETE.getMessage().replace("{quest}", displayName);
@@ -232,7 +239,7 @@ public class NormalQuestController implements QuestController {
             Messages.send(questFinishEvent.getQuestFinishMessage(), player);
             if (config.getBoolean("options.titles-enabled")) {
                 plugin.getTitleHandle().sendTitle(player, Messages.TITLE_QUEST_COMPLETE_TITLE.getMessageLegacyColor().replace("{quest}", displayName),
-                        Messages.TITLE_QUEST_COMPLETE_SUBTITLE.getMessageLegacyColor().replace("{quest}", displayName));
+                  Messages.TITLE_QUEST_COMPLETE_SUBTITLE.getMessageLegacyColor().replace("{quest}", displayName));
             }
             for (String s : quest.getRewardString()) {
                 if (plugin.getConfig().getBoolean("options.quests-use-placeholderapi")) {
@@ -254,7 +261,8 @@ public class NormalQuestController implements QuestController {
             if (quest.isAutoStartEnabled()) {
                 QuestStartResult response = canPlayerStartQuest(qPlayer, quest);
                 return response == QuestStartResult.QUEST_SUCCESS || response == QuestStartResult.QUEST_ALREADY_STARTED;
-            } else return qPlayer.getQuestProgressFile().hasQuestProgress(quest) && qPlayer.getQuestProgressFile().getQuestProgress(quest).isStarted();
+            } else
+                return qPlayer.getQuestProgressFile().hasQuestProgress(quest) && qPlayer.getQuestProgressFile().getQuestProgress(quest).isStarted();
         }
     }
 
@@ -281,7 +289,7 @@ public class NormalQuestController implements QuestController {
             Messages.QUEST_CANCEL_NOTCANCELLABLE.send(player);
             return false;
         }
-       resetQuest(questProgress);
+        resetQuest(questProgress);
         if (player != null) {
             QItemStack qItemStack = plugin.getQItemStackRegistry().getQuestItemStack(quest);
             String displayName = Chat.legacyStrip(qItemStack.getName());
@@ -292,10 +300,14 @@ public class NormalQuestController implements QuestController {
             // PlayerCancelQuestEvent -- end
             Messages.send(questCancelEvent.getQuestCancelMessage(), player);
             SoundUtils.playSoundForPlayer(player, plugin.getQuestsConfig().getString("options.sounds.quest-cancel"));
+            String trackedQuest = qPlayer.getPlayerPreferences().getTrackedQuestId();
+            if (trackedQuest != null && trackedQuest.equals(quest.getId())) {
+                qPlayer.executeBossBar(bossBar -> bossBar.removePlayer(player));
+            }
         }
         if (config.getBoolean("options.allow-quest-track")
-                && config.getBoolean("options.quest-autotrack")
-                && quest.getId().equals(qPlayer.getPlayerPreferences().getTrackedQuestId())) {
+          && config.getBoolean("options.quest-autotrack")
+          && quest.getId().equals(qPlayer.getPlayerPreferences().getTrackedQuestId())) {
             trackNextQuest(qPlayer, null);
         }
         return true;
@@ -320,8 +332,8 @@ public class NormalQuestController implements QuestController {
             Messages.send(questCancelEvent.getQuestExpireMessage(), player);
         }
         if (config.getBoolean("options.allow-quest-track")
-                && config.getBoolean("options.quest-autotrack")
-                && quest.getId().equals(qPlayer.getPlayerPreferences().getTrackedQuestId())) {
+          && config.getBoolean("options.quest-autotrack")
+          && quest.getId().equals(qPlayer.getPlayerPreferences().getTrackedQuestId())) {
             trackNextQuest(qPlayer, null);
         }
         return true;
@@ -330,12 +342,13 @@ public class NormalQuestController implements QuestController {
     @Override
     public void trackQuestForPlayer(QPlayer qPlayer, Quest quest) {
         Player player = Bukkit.getPlayer(qPlayer.getPlayerUUID());
-
+        
         if (quest == null) {
             String currentTrackedQuestId = qPlayer.getPlayerPreferences().getTrackedQuestId();
             qPlayer.getPlayerPreferences().setTrackedQuestId(null);
             if (player != null) {
                 Bukkit.getPluginManager().callEvent(new PlayerStopTrackQuestEvent(player, qPlayer));
+                qPlayer.executeBossBar(bossBar -> bossBar.removePlayer(player));
                 Quest currentTrackedQuest;
                 if (currentTrackedQuestId != null && (currentTrackedQuest = plugin.getQuestManager().getQuestById(currentTrackedQuestId)) != null) {
                     QItemStack qItemStack = plugin.getQItemStackRegistry().getQuestItemStack(currentTrackedQuest);
@@ -350,6 +363,18 @@ public class NormalQuestController implements QuestController {
             if (player != null) {
                 Bukkit.getPluginManager().callEvent(new PlayerStartTrackQuestEvent(player, qPlayer));
                 Messages.QUEST_TRACK.send(player, "{quest}", displayName);
+                qPlayer.executeBossBar(bossBar -> {
+                    if (!bossBar.getPlayers().contains(player)) {
+                        bossBar.addPlayer(player);
+                        bossBar.setColor(BarColor.valueOf(config.getString("options.bossbar.color").toUpperCase()));
+                        bossBar.setTitle(
+                          PlaceholderAPI.setPlaceholders(
+                            player, 
+                            Chat.legacyColor(config.getString("options.bossbar.title"))
+                          )
+                        );
+                    }
+                });
             }
         }
     }
@@ -377,10 +402,9 @@ public class NormalQuestController implements QuestController {
 
     private void trackNextQuest(QPlayer qPlayer, Quest previousQuest) {
         if (config.getBoolean("options.quest-autotrack")
-                && (previousQuest == null || !(previousQuest.isRepeatable() && !previousQuest.isCooldownEnabled()))) {
-            Quest nextQuest;
+          && (previousQuest == null || !(previousQuest.isRepeatable() && !previousQuest.isCooldownEnabled()))) {
             if (qPlayer.getQuestProgressFile().getStartedQuests().size() > 0) {
-                nextQuest = qPlayer.getQuestProgressFile().getStartedQuests().get(0);
+                Quest nextQuest = qPlayer.getQuestProgressFile().getStartedQuests().get(0);
                 qPlayer.trackQuest(nextQuest);
             } else {
                 qPlayer.trackQuest(null);
